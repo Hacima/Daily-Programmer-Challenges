@@ -1,19 +1,23 @@
 /*
 There's so much going on in this program that I want to change, it's ridiculous. 
 I will try to document this as best as possible in the future. 
-
-This is a program that takes a musical note as an input and outputs a major scale
-using that note as the root. It was a much more complicated program than I expected to create.
-Obviously, the BEST way to do this is to simply list out all the major scales and 
-use a switch statement. I wanted something I could expand to cover all minor scales, modes,
-chords, arpeggios, etc. It's a delicate work in progress, but I'm really enjoying the challenge!
 */
+
+//notes contains 2 octaves so that 'populate()' can grab any 8 consecutive notes without errors.
 var notes = ["A", "B", "C", "D", "E", "F", "G", "A", "B", "C", "D", "E", "F", "G"];
-var majScale =    [2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1];
+
+//stepPattern is the pattern that natural notes take. [0] is the number of half-steps from "A" to "B",
+//[1] is the half-steps from "B" to "C", etc. Any deviation from this pattern requires accidentals.
 var stepPattern = [2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2];
-var naturalHalfsteps = ["B","E"];
-var myScale = ["C", "D", "E", "F", "G", "A", "B", "C"];
-var root = "C";
+
+//majScale contains the half-step pattern for the major scale. There is no reason to use 2 octaves
+//yet, but I do plan on adding modes which would make multiple octaves quite useful.
+var majScale = [2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1];
+var natMinScale = [2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2];
+var harMinScale = [2, 1, 2, 2, 1, 1, 3, 2, 1, 2, 2, 1, 1, 3];
+
+var myScale = ["C", "D", "E", "F", "G", "A", "B", "C"]; //Scale to be populated.
+var root = "C"; //Starting point for the scale
 
 
 root = prompt("Hello, please input the root note of any major scale (C# or Ab, etc).");
@@ -21,6 +25,7 @@ root = prompt("Hello, please input the root note of any major scale (C# or Ab, e
 function notePos(note, noteList){
     return noteList.indexOf(note);
 }
+
 function populateScale(rootNote, scale){
     var rootNotePosition = notePos(rootNote.charAt(0), notes);
     scale[0] = rootNote;
