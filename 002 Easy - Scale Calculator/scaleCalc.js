@@ -69,8 +69,10 @@ function addAccidentals(userScale, steps, scaleType) {
     }
 }
 
-scaleType = prompt("What type of scale would you like to calculate?");
-root = prompt("What is the root note?");
+
+scaleType = document.getElementById("scaleType").value;
+//root = document.getElementById("root").value + document.getElementById("accidental").value;
+/*
 populateScale(root, myScale);
 if (scaleType === "Major") {
     addAccidentals(myScale, stepPattern, majScale);
@@ -78,5 +80,6 @@ if (scaleType === "Major") {
     addAccidentals(myScale, stepPattern, natMinScale);
 } else if (scaleType === "Harmonic Minor") {
     addAccidentals(myScale, stepPattern, harMinScale);
-}
-console.log(myScale);
+}*/
+
+document.getElementById("result").innerHTML = scaleType;
