@@ -10,17 +10,16 @@ var notes = ["A", "B", "C", "D", "E", "F", "G", "A", "B", "C", "D", "E", "F", "G
 //[1] is the half-steps from "B" to "C", etc. Any deviation from this pattern requires accidentals.
 var stepPattern = [2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2];
 
-//majScale contains the half-step pattern for the major scale. There is no reason to use 2 octaves
+//These arrays contain the half-step patterns for various scales. There is no reason to use 2 octaves
 //yet, but I do plan on adding modes which would make multiple octaves quite useful.
-var majScale = [2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1];
+var majScale =    [2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1];
 var natMinScale = [2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2];
-var harMinScale = [2, 1, 2, 2, 1, 1, 3, 2, 1, 2, 2, 1, 1, 3];
+var harMinScale = [2, 1, 2, 2, 1, 3, 1, 2, 1, 2, 2, 1, 3, 1];
 
+var modes = ["Ionian", "Dorian", "Phrygian", "Lydian", "Mixolydian", "Aeolian", "Locrian"];
 var myScale = ["C", "D", "E", "F", "G", "A", "B", "C"]; //Scale to be populated.
 var root = "C"; //Starting point for the scale
-
-
-root = prompt("Hello, please input the root note of any major scale (C# or Ab, etc).");
+var scaleType = "Major";
 
 function notePos(note, noteList){
     return noteList.indexOf(note);
@@ -39,7 +38,7 @@ function printAccidentals(numAccidentals){
     if(numAccidentals===1){
         return "#";
     }else if(numAccidentals===2){
-        return "##";
+        return "x";
     }else if(numAccidentals===-1){
         return "b";
     }else if(numAccidentals===-2){
@@ -54,7 +53,7 @@ function addAccidentals(userScale, steps, scaleType){
     var accidental = 0;
     if (userScale[0].charAt(1)==="b"){
         accidental = -1;
-	}else if (userScale[0].charAt(1)==="#"){
+    }else if (userScale[0].charAt(1)==="#"){
 		accidental = 1;
 	}
     for(var i = 1; i < userScale.length; i++){
@@ -62,7 +61,14 @@ function addAccidentals(userScale, steps, scaleType){
         userScale[i] += printAccidentals(accidental);
     }
 }
-
+scaleType = prompt("What type of scale would you like to calculate?");
+root = prompt("What is the root note?");
 populateScale(root, myScale);
-addAccidentals(myScale,stepPattern,majScale);
+if (scaleType === "Major"){
+    addAccidentals(myScale,stepPattern,majScale);
+}else if (scaleType === "Minor"){
+    addAccidentals(myScale,stepPattern,natMinScale);
+}else if (scaleType === "Harmonic Minor"){
+    addAccidentals(myScale,stepPattern,harMinScale);
+}
 console.log(myScale);
