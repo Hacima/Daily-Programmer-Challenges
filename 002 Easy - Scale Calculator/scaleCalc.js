@@ -21,54 +21,62 @@ var myScale = ["C", "D", "E", "F", "G", "A", "B", "C"]; //Scale to be populated.
 var root = "C"; //Starting point for the scale
 var scaleType = "Major";
 
-function notePos(note, noteList){
+function notePos(note, noteList) {
+    "use strict";
     return noteList.indexOf(note);
 }
 
-function populateScale(rootNote, scale){
-    var rootNotePosition = notePos(rootNote.charAt(0), notes);
+function populateScale(rootNote, scale) {
+    "use strict";
+    var i = 0, //for loop iterator
+        rootNotePosition = notePos(rootNote.charAt(0), notes);
+    
     scale[0] = rootNote;
-    for(var i = 1; i < scale.length; i++){
+    for (i = 1; i < scale.length; i += 1) {
         scale[i] = notes[rootNotePosition + i];
     }
 }
 
 //There HAS to be a better way...
-function printAccidentals(numAccidentals){
-    if(numAccidentals===1){
+function printAccidentals(numAccidentals) {
+    "use strict";
+    if (numAccidentals === 1) {
         return "#";
-    }else if(numAccidentals===2){
+    } else if (numAccidentals === 2) {
         return "x";
-    }else if(numAccidentals===-1){
+    } else if (numAccidentals === -1) {
         return "b";
-    }else if(numAccidentals===-2){
+    } else if (numAccidentals === -2) {
         return "bb";
-    }else{
+    } else {
         return "";
     }
 }
 
-function addAccidentals(userScale, steps, scaleType){
-    var rootNotePosition = notePos(userScale[0].charAt(0), notes);
-    var accidental = 0;
-    if (userScale[0].charAt(1)==="b"){
+function addAccidentals(userScale, steps, scaleType) {
+    "use strict";
+    var rootNotePosition = notePos(userScale[0].charAt(0), notes),
+        accidental = 0,
+        i = 0; //for loop iterator
+    if (userScale[0].charAt(1) === "b") {
         accidental = -1;
-    }else if (userScale[0].charAt(1)==="#"){
+    } else if (userScale[0].charAt(1) === "#") {
 		accidental = 1;
 	}
-    for(var i = 1; i < userScale.length; i++){
-		accidental += scaleType[i-1] - steps[rootNotePosition+i-1];
+    for (i = 1; i < userScale.length; i += 1) {
+		accidental += scaleType[i - 1] - steps[rootNotePosition + i - 1];
         userScale[i] += printAccidentals(accidental);
     }
 }
+
 scaleType = prompt("What type of scale would you like to calculate?");
 root = prompt("What is the root note?");
 populateScale(root, myScale);
-if (scaleType === "Major"){
-    addAccidentals(myScale,stepPattern,majScale);
-}else if (scaleType === "Minor"){
-    addAccidentals(myScale,stepPattern,natMinScale);
-}else if (scaleType === "Harmonic Minor"){
-    addAccidentals(myScale,stepPattern,harMinScale);
+if (scaleType === "Major") {
+    addAccidentals(myScale, stepPattern, majScale);
+} else if (scaleType === "Minor") {
+    addAccidentals(myScale, stepPattern, natMinScale);
+} else if (scaleType === "Harmonic Minor") {
+    addAccidentals(myScale, stepPattern, harMinScale);
 }
 console.log(myScale);
