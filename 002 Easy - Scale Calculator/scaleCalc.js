@@ -70,7 +70,9 @@ function addAccidentals(userScale, steps, scaleType) {
 }
 
 
-scaleType = document.getElementById("scaleType").value;
+//scaleType = document.getElementById("scaleType").value;
+alert("Hello");
+
 //root = document.getElementById("root").value + document.getElementById("accidental").value;
 /*
 populateScale(root, myScale);
@@ -82,4 +84,4 @@ if (scaleType === "Major") {
     addAccidentals(myScale, stepPattern, harMinScale);
 }*/
 
-document.getElementById("result").innerHTML = scaleType;
+

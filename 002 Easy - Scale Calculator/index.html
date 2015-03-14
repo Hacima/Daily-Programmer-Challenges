@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <script type="text/javascript" src="scaleCalc.js"></script>
 </head>
 <body>
     <dir id="wrap">
         <dir id="title"><h1>Scale Calculator</h1></dir>
         <dir id="main">
             <dir id="calculator">
-                <form onsubmit="scaleCalc()">
+                <form>
                     <select name="root" id="root">
                         <option value="A">A</option>
                         <option value="B">B</option>
@@ -30,15 +31,14 @@
                         <option value="Harmonic Minor">Harmonic Minor</option>
                     </select>
                     <br>
-                    <input type="submit">
+                    <button type="button" onclick="scaleCalc()">Submit</button>
                 </form>
             </dir>
             <dir>
-                <p id="result"></p>
+                <p id="result">Test</p>
             </dir>
         </dir>
     </dir>
     
-    <script type="text/javascript" src="scaleCalc.js"></script>
 </body>
 </html>
