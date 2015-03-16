@@ -30,8 +30,7 @@ function populateScale(rootNote, scale) {
     "use strict";
     var i = 0, //for loop iterator
         rootNotePosition = notePos(rootNote.charAt(0), notes);
-    
-     scale[0] = rootNote;
+    scale[0] = rootNote;
     
     for (i = 1; i < scale.length; i += 1) {
         scale[i] = notes[rootNotePosition + i];
@@ -70,11 +69,13 @@ function addAccidentals(userScale, steps, scaleType) {
     }
 }
 
-function clearResult(resultID){
+function clearResult(resultID) {
+    "use strict";
     document.getElementById(resultID).innerHTML = "";
 }
 
-function run(){
+function run() {
+    "use strict";
     var root = document.getElementById("root").value + document.getElementById("accidental").value,
         scaleType = document.getElementById("scaleType").value,
         i = 0;
@@ -91,7 +92,7 @@ function run(){
     
     clearResult("result");
     
-    for(i = 0; i < myScale.length; i++){
+    for (i = 0; i < myScale.length; i += 1) {
         document.getElementById("result").innerHTML += myScale[i] + " ";
     }
 }

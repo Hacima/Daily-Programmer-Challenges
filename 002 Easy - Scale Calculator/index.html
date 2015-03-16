@@ -2,12 +2,13 @@
 <html>
 <head>
     <script type="text/javascript" src="scaleCalc.js"></script>
+    <link type="text/css" rel="stylesheet" href="stylesheet.css" media="screen" />
 </head>
 <body>
-    <dir id="wrap">
-        <dir id="title"><h1>Scale Calculator</h1></dir>
-        <dir id="main">
-            <dir id="calculator">
+    <div id="wrap">
+        <div id="title"><h1>Scale Calculator</h1></div>
+        <div id="main">
+            <div id="calculator">
                 <form>
                     <select name="root" id="root">
                         <option value="A">A</option>
@@ -33,12 +34,11 @@
                     <br>
                     <button type="button" onclick="run()">Submit</button>
                 </form>
-            </dir>
-            <dir>
+            </div>
+            <div>
                 <p id="result"></p>
-            </dir>
-        </dir>
-    </dir>
-    
+            </div>
+        </div>
+    </div>
 </body>
 </html>
