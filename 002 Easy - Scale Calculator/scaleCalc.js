@@ -31,7 +31,8 @@ function populateScale(rootNote, scale) {
     var i = 0, //for loop iterator
         rootNotePosition = notePos(rootNote.charAt(0), notes);
     
-    scale[0] = rootNote;
+     scale[0] = rootNote;
+    
     for (i = 1; i < scale.length; i += 1) {
         scale[i] = notes[rootNotePosition + i];
     }
@@ -49,7 +50,7 @@ function printAccidentals(numAccidentals) {
     } else if (numAccidentals === -2) {
         return "bb";
     } else {
-        return "";
+        return "♮";
     }
 }
 
@@ -58,9 +59,9 @@ function addAccidentals(userScale, steps, scaleType) {
     var rootNotePosition = notePos(userScale[0].charAt(0), notes),
         accidental = 0,
         i = 0; //for loop iterator
-    if (userScale[0].charAt(1) === "b") {
+    if (userScale[0].charAt(1) === "♭") {
         accidental = -1;
-    } else if (userScale[0].charAt(1) === "#") {
+    } else if (userScale[0].charAt(1) === "♯") {
 		accidental = 1;
 	}
     for (i = 1; i < userScale.length; i += 1) {
@@ -69,12 +70,29 @@ function addAccidentals(userScale, steps, scaleType) {
     }
 }
 
+function run(){
+    alert(document.getElementById("root").value);
+    var root = document.getElementById("root").value + document.getElementById("accidental").value;
+    var scaleType = document.getElementById("scaleType").value;
+
+    populateScale(root, myScale);
+    if (scaleType === "Major") {
+        addAccidentals(myScale, stepPattern, majScale);
+    } else if (scaleType === "Minor") {
+        addAccidentals(myScale, stepPattern, natMinScale);
+    } else if (scaleType === "Harmonic Minor") {
+        addAccidentals(myScale, stepPattern, harMinScale);
+    }
+    
+    document.getElementById("result").innerHTML = myScale;
+}
+
 
 //scaleType = document.getElementById("scaleType").value;
-alert("Hello");
+/*alert("Hello");
 
-//root = document.getElementById("root").value + document.getElementById("accidental").value;
-/*
+root = document.getElementById("root").value + document.getElementById("accidental").value;
+
 populateScale(root, myScale);
 if (scaleType === "Major") {
     addAccidentals(myScale, stepPattern, majScale);
@@ -82,6 +100,6 @@ if (scaleType === "Major") {
     addAccidentals(myScale, stepPattern, natMinScale);
 } else if (scaleType === "Harmonic Minor") {
     addAccidentals(myScale, stepPattern, harMinScale);
-}*/
-
+}
+*/
 
