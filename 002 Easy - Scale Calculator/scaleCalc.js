@@ -46,9 +46,9 @@ function printAccidentals(numAccidentals) {
     } else if (numAccidentals === 2) {
         return "x";
     } else if (numAccidentals === -1) {
-        return "b";
+        return "♭";
     } else if (numAccidentals === -2) {
-        return "bb";
+        return "♭♭";
     } else {
         return "♮";
     }
@@ -70,36 +70,28 @@ function addAccidentals(userScale, steps, scaleType) {
     }
 }
 
+function clearResult(resultID){
+    document.getElementById(resultID).innerHTML = "";
+}
+
 function run(){
-    alert(document.getElementById("root").value);
-    var root = document.getElementById("root").value + document.getElementById("accidental").value;
-    var scaleType = document.getElementById("scaleType").value;
+    var root = document.getElementById("root").value + document.getElementById("accidental").value,
+        scaleType = document.getElementById("scaleType").value,
+        i = 0;
 
     populateScale(root, myScale);
+    
     if (scaleType === "Major") {
         addAccidentals(myScale, stepPattern, majScale);
-    } else if (scaleType === "Minor") {
+    } else if (scaleType === "Natural Minor") {
         addAccidentals(myScale, stepPattern, natMinScale);
     } else if (scaleType === "Harmonic Minor") {
         addAccidentals(myScale, stepPattern, harMinScale);
     }
     
-    document.getElementById("result").innerHTML = myScale;
+    clearResult("result");
+    
+    for(i = 0; i < myScale.length; i++){
+        document.getElementById("result").innerHTML += myScale[i] + " ";
+    }
 }
-
-
-//scaleType = document.getElementById("scaleType").value;
-/*alert("Hello");
-
-root = document.getElementById("root").value + document.getElementById("accidental").value;
-
-populateScale(root, myScale);
-if (scaleType === "Major") {
-    addAccidentals(myScale, stepPattern, majScale);
-} else if (scaleType === "Minor") {
-    addAccidentals(myScale, stepPattern, natMinScale);
-} else if (scaleType === "Harmonic Minor") {
-    addAccidentals(myScale, stepPattern, harMinScale);
-}
-*/
-
