@@ -71,11 +71,13 @@ function addAccidentals(userScale, steps, scaleType) {
 
 function clearResult(resultID) {
     "use strict";
-    document.getElementById(resultID).innerHTML = "";
+    var elem = document.getElementById(resultID);
+    elem.innerHTML = "";
 }
 
 function run() {
     "use strict";
+    clearResult("result");
     var root = document.getElementById("root").value + document.getElementById("accidental").value,
         scaleType = document.getElementById("scaleType").value,
         i = 0;
@@ -90,9 +92,7 @@ function run() {
         addAccidentals(myScale, stepPattern, harMinScale);
     }
     
-    clearResult("result");
-    
     for (i = 0; i < myScale.length; i += 1) {
-        document.getElementById("result").innerHTML += myScale[i] + " ";
+        document.getElementById("result").innerHTML += "<li class='scaleNote'>" + myScale[i] + "</li>";
     }
 }
