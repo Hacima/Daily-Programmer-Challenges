@@ -1,6 +1,12 @@
 /*
-There's so much going on in this program that I want to change, it's ridiculous. 
-I will try to document this as best as possible in the future. 
+    So, this is my scale calculator program. The purpose is simple: Pick a root note from A to G, pick an accidental, pick a scale type, and it generates that scale! Pretty nifty!
+    Here's how it's supposed to work, step by step.
+    1. Clear the output window and get the first note of the scale. This is a 2 character string that you get by adding 'root' and 'accidental' together.
+    2. Using the first note of the scale, fill the rest of the scale with natural notes from our 'notes[]' array. We do this by finding our root note in the array, and grabbing the next 7 notes.
+    3. Get the type of scale to calculate. 'Normal' scales are easier to handle, so we have an if statement to direct the program to skip the steps we need to take for the modes.
+    4. If it's a 'normal' scale, we compare the step pattern for natural notes to the step pattern for the requested. For example, C to D is 2 steps, but if the scale pattern says to only go 1 step, we decrement the accidental variable by the difference and calculate the new accidental. In this case, it would result in C to D♭. 
+    5. If it's a mode... well, I'll get to that in a future update.
+    6. Push the scale as <li> items to the output <div> and we're done!
 */
 
 //notes contains 2 octaves so that 'populate()' can grab any 8 consecutive notes without errors.
@@ -33,17 +39,6 @@ function populateScale(rootNote, scale) {
     
     for (i = 1; i < scale.length; i += 1) {
         scale[i] = notes[rootNotePosition + i];
-    }
-}
-
-function setAccidental(root) {
-    "use strict";
-    if (root.charAt(1) === "♭") {
-        return -1;
-    } else if (root.charAt(1) === "♯") {
-		return 1;
-	} else {
-        return 0;
     }
 }
 
