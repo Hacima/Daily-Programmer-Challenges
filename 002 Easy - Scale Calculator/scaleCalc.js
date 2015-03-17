@@ -10,8 +10,7 @@ var notes = ["A", "B", "C", "D", "E", "F", "G", "A", "B", "C", "D", "E", "F", "G
 //[1] is the half-steps from "B" to "C", etc. Any deviation from this pattern requires accidentals.
 var stepPattern = [2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2];
 
-//These arrays contain the half-step patterns for various scales. There is no reason to use 2 octaves
-//yet, but I do plan on adding modes which would make multiple octaves quite useful.
+//These arrays contain the half-step patterns for various scales.
 var majScale =    [2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1];
 var natMinScale = [2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2];
 var harMinScale = [2, 1, 2, 2, 1, 3, 1, 2, 1, 2, 2, 1, 3, 1];
@@ -37,35 +36,60 @@ function populateScale(rootNote, scale) {
     }
 }
 
-//There HAS to be a better way...
-function printAccidentals(numAccidentals) {
+function setAccidental(root) {
     "use strict";
-    if (numAccidentals === 1) {
-        return "#";
-    } else if (numAccidentals === 2) {
-        return "x";
-    } else if (numAccidentals === -1) {
-        return "♭";
-    } else if (numAccidentals === -2) {
-        return "♭♭";
-    } else {
-        return "♮";
+    if (root.charAt(1) === "♭") {
+        return -1;
+    } else if (root.charAt(1) === "♯") {
+		return 1;
+	} else {
+        return 0;
     }
+}
+
+function getScaleType(scaleType) {
+    "use strict";
+    if (scaleType === "Major") {
+        return majScale;
+    } else if (scaleType === "Natural Minor") {
+        return natMinScale;
+    } else if (scaleType === "Harmonic Minor") {
+        return harMinScale;
+    } else {
+        return "mode";
+    }
+}
+
+function getMode(mode) {
+    "use strict";
+    var modeSteps = [0, 0, 0, 0, 0, 0, 0],
+        i = 0,
+        startingPoint = modes.indexOf(mode);
+
+    for (i = 0; i < modeSteps.length; i += 1) {
+        modeSteps[i] = majScale[i + startingPoint];
+    }
+    return modeSteps;
 }
 
 function addAccidentals(userScale, steps, scaleType) {
     "use strict";
     var rootNotePosition = notePos(userScale[0].charAt(0), notes),
-        accidental = 0,
+        accidentalList = ['♭♭', '♭', '♮', '♯', 'x'],
+        accidentalDegree = accidentalList.indexOf(userScale[0].charAt(1)),
         i = 0; //for loop iterator
-    if (userScale[0].charAt(1) === "♭") {
-        accidental = -1;
-    } else if (userScale[0].charAt(1) === "♯") {
-		accidental = 1;
-	}
+
     for (i = 1; i < userScale.length; i += 1) {
-		accidental += scaleType[i - 1] - steps[rootNotePosition + i - 1];
-        userScale[i] += printAccidentals(accidental);
+		accidentalDegree += scaleType[i - 1] - steps[rootNotePosition + i - 1];
+        userScale[i] += accidentalList[accidentalDegree];
+    }
+}
+
+function printResult(elementName, scale) {
+    "use strict";
+    var i = 0;
+    for (i = 0; i < scale.length; i += 1) {
+        document.getElementById(elementName).innerHTML += "<li class='scaleNote'>" + scale[i] + "</li>";
     }
 }
 
@@ -77,22 +101,19 @@ function clearResult(resultID) {
 
 function run() {
     "use strict";
-    clearResult("result");
     var root = document.getElementById("root").value + document.getElementById("accidental").value,
-        scaleType = document.getElementById("scaleType").value,
+        scaleType = getScaleType(document.getElementById("scaleType").value),
         i = 0;
-
+    
+    clearResult("result");
     populateScale(root, myScale);
     
-    if (scaleType === "Major") {
-        addAccidentals(myScale, stepPattern, majScale);
-    } else if (scaleType === "Natural Minor") {
-        addAccidentals(myScale, stepPattern, natMinScale);
-    } else if (scaleType === "Harmonic Minor") {
-        addAccidentals(myScale, stepPattern, harMinScale);
+    if (scaleType === "mode") {
+        scaleType = document.getElementById("scaleType").value;
+        addAccidentals(myScale, stepPattern, getMode(scaleType));
+    } else {
+        addAccidentals(myScale, stepPattern, scaleType);
     }
-    
-    for (i = 0; i < myScale.length; i += 1) {
-        document.getElementById("result").innerHTML += "<li class='scaleNote'>" + myScale[i] + "</li>";
-    }
+
+    printResult("result", myScale);
 }
