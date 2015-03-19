@@ -22,7 +22,7 @@ var natMinScale = [2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2];
 var harMinScale = [2, 1, 2, 2, 1, 3, 1, 2, 1, 2, 2, 1, 3, 1];
 
 var modes = ["Ionian", "Dorian", "Phrygian", "Lydian", "Mixolydian", "Aeolian", "Locrian"];
-var myScale = ["C", "D", "E", "F", "G", "A", "B", "C"]; //Scale to be populated.
+var myScale = ["C", "D", "E", "F", "G", "A", "B"]; //Scale to be populated.
 var root = "C"; //Starting point for the scale
 var scaleType = "Major";
 
@@ -95,7 +95,16 @@ function printResult(elementName, scale) {
     "use strict";
     var i = 0;
     for (i = 0; i < scale.length; i += 1) {
-        document.getElementById(elementName).innerHTML += "<li class='scaleNote'>" + scale[i] + "</li>";
+        document.getElementById(elementName).innerHTML += "<li class='rootNotes'>" + scale[i] + "</li>";
+    }
+}
+
+function printChordTones(chordTone, elementName, scale) {
+    "use strict";
+    var i = 0;
+    chordTone -= 1;
+    for (i = 0; i < scale.length; i += 1) {
+        document.getElementById(elementName).innerHTML += "<li class='chordTones'>" + scale[(i + chordTone) % scale.length] + "</li>";
     }
 }
 
@@ -112,6 +121,9 @@ function run() {
         i = 0;
     
     clearResult("result");
+    clearResult("thirds");
+    clearResult("fifths");
+    
     populateScale(root, myScale);
     
     if (scaleType === "mode") {
@@ -123,4 +135,6 @@ function run() {
     
     stripNaturals(myScale);
     printResult("result", myScale);
+    printChordTones(3, "thirds", myScale);
+    printChordTones(5, "fifths", myScale);
 }

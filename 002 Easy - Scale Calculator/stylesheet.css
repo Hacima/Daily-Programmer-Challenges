@@ -22,21 +22,41 @@ select{
 }
 
 #listWrap{
-    margin:2px auto;
-    margin-top:10px;
-    border: 1px solid grey;
-    width: 300px;
-    text-align: center;
-    height:25px;
+    margin:0px auto;
+    margin-top:25px;
+    width: 400px;
+    text-align: ;
+    height:75px;
 }
 
-#result{
-    margin:2px auto;
+
+ul{
+    margin:0px auto;
     line-height: 1.4;
-    padding:0;
+    padding: 0;
 }
 
 li {
+    padding:0;
+    margin:0;
     display: inline-block;
     width:37px;
+    box-sizing: border-box;
+}
+
+.rootNotes {
+    font-weight:600;
+}
+
+.chordTones:first-child {
+    border-left: 1px solid grey;
+}
+
+.chordTones{
+    border-top: 1px solid grey;
+    border-right: 1px solid grey;
+}
+
+#fifths .chordTones{
+    border-bottom: 1px solid grey;
 }
