@@ -1,51 +1,50 @@
-body{
+body {
     margin: 0;
     padding: 0;
     width: 950px;
 }
 
-#title{
+#title {
     text-align: center;
 }
 
-#calculator{
+#calculator {
     text-align: center;
-    width:950px;
+    width: 950px;
 }
 
-select{
-    height:25px;
+select {
+    height: 25px;
 }
 
-#submitButton{
-    margin-top:10px;
+#submitButton {
+    margin-top: 10px;
 }
 
-#listWrap{
-    margin:0px auto;
-    margin-top:25px;
+#listWrap {
+    margin: 0px auto;
+    margin-top: 25px;
     width: 400px;
-    text-align: ;
-    height:75px;
+    text-align: center;
+    height: 75px;
 }
 
-
-ul{
-    margin:0px auto;
-    line-height: 1.4;
+.noteList{
     padding: 0;
+    margin: 0;
+    height: 25px;
+    text-align: center;
 }
 
-li {
-    padding:0;
-    margin:0;
+.noteList div {
     display: inline-block;
-    width:37px;
+    line-height: 1.5;
+    width: 37px;
     box-sizing: border-box;
 }
 
 .rootNotes {
-    font-weight:600;
+    font-weight: 600;
 }
 
 .chordTones:first-child {

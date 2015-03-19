@@ -25,6 +25,9 @@ var modes = ["Ionian", "Dorian", "Phrygian", "Lydian", "Mixolydian", "Aeolian", 
 var myScale = ["C", "D", "E", "F", "G", "A", "B"]; //Scale to be populated.
 var root = "C"; //Starting point for the scale
 var scaleType = "Major";
+var rootOutput = "rootNotes";
+var thirdsOutput = "thirds";
+var fifthsOutput = "fifths";
 
 function notePos(note, noteList) {
     "use strict";
@@ -95,7 +98,7 @@ function printResult(elementName, scale) {
     "use strict";
     var i = 0;
     for (i = 0; i < scale.length; i += 1) {
-        document.getElementById(elementName).innerHTML += "<li class='rootNotes'>" + scale[i] + "</li>";
+        document.getElementById(elementName).innerHTML += "<div class='rootNotes'>" + scale[i] + "</div>";
     }
 }
 
@@ -104,7 +107,7 @@ function printChordTones(chordTone, elementName, scale) {
     var i = 0;
     chordTone -= 1;
     for (i = 0; i < scale.length; i += 1) {
-        document.getElementById(elementName).innerHTML += "<li class='chordTones'>" + scale[(i + chordTone) % scale.length] + "</li>";
+        document.getElementById(elementName).innerHTML += "<div class='chordTones'>" + scale[(i + chordTone) % scale.length] + "</div>";
     }
 }
 
@@ -120,9 +123,9 @@ function run() {
         scaleType = getScaleType(document.getElementById("scaleType").value),
         i = 0;
     
-    clearResult("result");
-    clearResult("thirds");
-    clearResult("fifths");
+    clearResult(rootOutput);
+    clearResult(thirdsOutput);
+    clearResult(fifthsOutput);
     
     populateScale(root, myScale);
     
@@ -134,7 +137,7 @@ function run() {
     }
     
     stripNaturals(myScale);
-    printResult("result", myScale);
-    printChordTones(3, "thirds", myScale);
-    printChordTones(5, "fifths", myScale);
+    printResult(rootOutput, myScale);
+    printChordTones(3, thirdsOutput, myScale);
+    printChordTones(5, fifthsOutput, myScale);
 }
