@@ -80,6 +80,17 @@ function addAccidentals(userScale, steps, scaleType) {
     }
 }
 
+function stripNaturals(scale) {
+    "use strict";
+    var natural = '♮',
+        i = 0;
+    for (i = 0; i < scale.length; i += 1) {
+        if (scale[i].charAt(1) === natural) {
+            scale[i] = scale[i].charAt(0);
+        }
+    }
+}
+
 function printResult(elementName, scale) {
     "use strict";
     var i = 0;
@@ -109,6 +120,7 @@ function run() {
     } else {
         addAccidentals(myScale, stepPattern, scaleType);
     }
-
+    
+    stripNaturals(myScale);
     printResult("result", myScale);
 }
