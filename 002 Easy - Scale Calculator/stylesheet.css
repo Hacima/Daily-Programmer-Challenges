@@ -24,12 +24,27 @@ select {
 #listWrap {
     margin: 0px auto;
     margin-top: 25px;
-    width: 400px;
+    width: 270px;
     text-align: center;
-    height: 75px;
+    height: 150px;
 }
 
-.noteList{
+#listTitles {
+    display:inline;
+    float:left;
+    width:340px;
+    text-align: right;
+    margin-top: 25px;
+    height: 150px;
+}
+
+#listTitles p{
+    margin:0;
+    line-height: 1.6;
+    font-weight: 600;
+}
+
+.noteList {
     padding: 0;
     margin: 0;
     height: 25px;
@@ -51,7 +66,7 @@ select {
     border-left: 1px solid grey;
 }
 
-.chordTones{
+.chordTones {
     border-top: 1px solid grey;
     border-right: 1px solid grey;
 }

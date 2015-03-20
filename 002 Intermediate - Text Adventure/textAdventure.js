@@ -42,6 +42,10 @@ function getLocation(playerPosition, map){
     }
 }
 
+function Meadow(){
+	
+}
+
 function validateInput(input, listOfValidInputs){
 	var i = 0,
 	    valid = false;
