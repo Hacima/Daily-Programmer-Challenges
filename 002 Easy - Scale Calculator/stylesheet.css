@@ -24,7 +24,7 @@ select {
 #listWrap {
     margin: 0px auto;
     margin-top: 25px;
-    width: 270px;
+    width: 300px;
     text-align: center;
     height: 150px;
 }
@@ -32,13 +32,13 @@ select {
 #listTitles {
     display:inline;
     float:left;
-    width:340px;
+    width:320px;
     text-align: right;
     margin-top: 25px;
     height: 150px;
 }
 
-#listTitles p{
+#listTitles p {
     margin:0;
     line-height: 1.6;
     font-weight: 600;
@@ -54,8 +54,12 @@ select {
 .noteList div {
     display: inline-block;
     line-height: 1.5;
-    width: 37px;
+    width: 42px;
     box-sizing: border-box;
+}
+
+.steps {
+    font-size: .9em;
 }
 
 .rootNotes {
@@ -71,6 +75,10 @@ select {
     border-right: 1px solid grey;
 }
 
-#fifths .chordTones{
+#fifths .chordTones {
     border-bottom: 1px solid grey;
+}
+
+.chords {
+    font-size: .6em;
 }

@@ -69,7 +69,7 @@ function getMode(mode) {
         scale = getScaleType("Major"),
         modes = ["Ionian", "Dorian", "Phrygian", "Lydian", "Mixolydian", "Aeolian", "Locrian"],
         startingPoint = modes.indexOf(mode);
-
+    
     for (i = 0; i < modeSteps.length; i += 1) {
         modeSteps[i] = scale[i + startingPoint];
     }
@@ -82,7 +82,7 @@ function addAccidentals(userScale, steps, scaleType) {
         accidentalList = [doubleFlat, flat, natural, sharp, doubleSharp],
         accidentalDegree = accidentalList.indexOf(userScale[0].charAt(1)),
         i = 0; //for loop iterator
-
+    
     for (i = 1; i < userScale.length; i += 1) {
 		accidentalDegree += scaleType[i - 1] - steps[rootNotePosition + i - 1];
         userScale[i] += accidentalList[accidentalDegree];
@@ -146,6 +146,19 @@ function getIntervalQuality(note1, note2) {
     }
 }
 
+function getChordQuality(interval1, interval2) {
+    "use strict";
+    if (interval1 === "M" && interval2 === "M") {
+        return "Aug";
+    } else if (interval1 === "M" && interval2 === "m") {
+        return "Maj";
+    } else if (interval1 === "m" && interval2 === "M") {
+        return "Min";
+    } else if (interval1 === "m" && interval2 === "m") {
+        return "Dim";
+    }
+}
+
 function stripNaturals(scale) {
     "use strict";
     var i = 0;
@@ -185,6 +198,28 @@ function printStepPattern(elementName, scale) {
     }
 }
 
+function printChords(elementId, scale) {
+    "use strict";
+    var interval1,
+        interval2,
+        note1,
+        note2,
+        note3,
+        i = 0,
+        chord,
+        elem = document.getElementById(elementId);
+    
+    for (i = 0; i < (scale.length); i += 1) {
+        note1 = scale[i % scale.length];
+        note2 = scale[(i + 2) % scale.length];
+        note3 = scale[(i + 4) % scale.length];
+        interval1 = getIntervalQuality(note1, note2);
+        interval2 = getIntervalQuality(note2, note3);
+        chord = scale[i] + getChordQuality(interval1, interval2);
+        elem.innerHTML += "<div class='chords'>" + chord + "</div>";
+    }
+}
+
 function clearResult(resultID) {
     "use strict";
     var elem = document.getElementById(resultID);
@@ -197,16 +232,18 @@ function run() {
         root = document.getElementById("root").value + document.getElementById("accidental").value,
         myScale = ["A", "B", "C", "D", "E", "F", "G"],
         scaleType = getScaleType(document.getElementById("scaleType").value),
-        i = 0,
+        //i = 0,
+        stepOutput = "stepPattern",
         rootOutput = "rootNotes",
         thirdsOutput = "thirds",
         fifthsOutput = "fifths",
-        stepOutput = "stepPattern";
+        chordsOutput = "chords";
     
     clearResult(stepOutput);
     clearResult(rootOutput);
     clearResult(thirdsOutput);
     clearResult(fifthsOutput);
+    clearResult(chordsOutput);
     
     populateScale(root, myScale, notes);
     
@@ -217,9 +254,11 @@ function run() {
         addAccidentals(myScale, stepPattern, scaleType);
     }
     
+    printChords(chordsOutput, myScale);
     printStepPattern(stepOutput, myScale);
     stripNaturals(myScale); //Do this AFTER printStepPattern
     printResult(rootOutput, myScale);
     printChordTones(3, thirdsOutput, myScale);
     printChordTones(5, fifthsOutput, myScale);
+    alert("B".charAt(1));
 }
