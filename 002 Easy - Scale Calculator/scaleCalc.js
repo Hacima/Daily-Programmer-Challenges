@@ -3,20 +3,15 @@
     Here's how it's supposed to work, step by step.
     1. Clear the output window and get the first note of the scale. This is a 2 character string that you get by adding 'root' and 'accidental' together.
     2. Using the first note of the scale, fill the rest of the scale with natural notes from our 'notes[]' array. We do this by finding our root note in the array, and grabbing the next 7 notes.
-    3. Get the type of scale to calculate. 'Normal' scales are easier to handle, so we have an if statement to direct the program to skip the steps we need to take for the modes.
-    4. If it's a 'normal' scale, we compare the step pattern for natural notes to the step pattern for the requested. For example, C to D is 2 steps, but if the scale pattern says to only go 1 step, we decrement the accidental variable by the difference and calculate the new accidental. In this case, it would result in C to D♭. 
-    5. If it's a mode... well, I'll get to that in a future update.
-    6. Push the scale as <div> items and we're done!
+    3. Get the type of scale to calculate and grab the corresponding list of half-steps. There's no fancy algorhythm for this, just a simple switch statement.
+    4. Do a whole lot of other calculations for step patterns and chords!
+    5. Push the scale as <div> items and we're done!
 */
-
-//notes contains 2 octaves so that 'populate()' can grab any 8 consecutive notes without errors.
-//var notes = ["A", "B", "C", "D", "E", "F", "G", "A", "B", "C", "D", "E", "F", "G"];
 
 //stepPattern is the pattern that natural notes take. [0] is the number of half-steps from "A" to "B",
 //[1] is the half-steps from "B" to "C", etc. Any deviation from this pattern requires accidentals.
 var stepPattern = [2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2];
 
-//These arrays contain the half-step patterns for various scales.
 var doubleFlat = '♭♭';
 var flat = '♭';
 var natural = '♮';
@@ -25,13 +20,13 @@ var doubleSharp = 'x';
 
 function notePos(note) {
     "use strict";
-    var noteList = ["A", "B", "C", "D", "E", "F", "G", "A", "B", "C", "D", "E", "F", "G"];
+    var noteList = ["A", "B", "C", "D", "E", "F", "G"];
     return noteList.indexOf(note);
 }
 
 function secondNotePos(note) {
     "use strict";
-    var noteList = ["A", "B", "C", "D", "E", "F", "G", "A", "B", "C", "D", "E", "F", "G"];
+    var noteList = ["A", "B", "C", "D", "E", "F", "G"];
     return noteList.indexOf(note) + 7;
 }
 
@@ -48,37 +43,27 @@ function populateScale(rootNote, scale, noteList) {
 
 function getScaleType(scaleType) {
     "use strict";
-    var majScale    = [2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1],
-        natMinScale = [2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2],
-        harMinScale = [2, 1, 2, 2, 1, 3, 1, 2, 1, 2, 2, 1, 3, 1],
-        dorian      = [2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1, 2],
-        phrygian    = [1, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2],
-        lydian      = [2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1],
-        mixolydian  = [2, 2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2],
-        aeolian     = [2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2],
-        locrian     = [1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2, 1];
+    var major      = [2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1],
+        natMinor   = [2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2],
+        harMinor   = [2, 1, 2, 2, 1, 3, 1, 2, 1, 2, 2, 1, 3, 1],
+        dorian     = [2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1, 2],
+        phrygian   = [1, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2],
+        lydian     = [2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1],
+        mixolydian = [2, 2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2],
+        aeolian    = [2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2],
+        locrian    = [1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2, 1];
     
     switch(scaleType){
-        case "Major":
-            return majScale;
-        case "Natural Minor":
-            return natMinScale;
-        case "Harmonic Minor":
-            return harMinScale;
-        case "Dorian":
-            return dorian;
-        case "Phrygian":
-            return phrygian;
-        case "Lydian":
-            return lydian;
-        case "Mixolydian":
-            return mixolydian;
-        case "Aeolian":
-            return aeolian;
-        case "Locrian":
-            return locrian;
-        default:
-            return 0;
+        case "Major": return major;
+        case "Natural Minor": return natMinor;
+        case "Harmonic Minor": return harMinor;
+        case "Dorian": return dorian;
+        case "Phrygian": return phrygian;
+        case "Lydian": return lydian;
+        case "Mixolydian": return mixolydian;
+        case "Aeolian": return aeolian;
+        case "Locrian": return locrian;
+        default: return 0;
     }
 }
 
@@ -126,7 +111,6 @@ function getIntervalDistance(note1, note2, stepList) {
     "use strict";
     var lowNote = notePos(note1.charAt(0)),
         highNote = notePos(note2.charAt(0)),
-        accidentalList = [doubleFlat, flat, natural, sharp, doubleSharp],
         intervalDistance = 0,
         i = 0; //for loop iterator
     
@@ -134,8 +118,41 @@ function getIntervalDistance(note1, note2, stepList) {
         highNote = secondNotePos(note2.charAt(0));
     }
     
-    intervalDistance += (accidentalList.indexOf(note1.charAt(1)) - 2) * -1;
-    intervalDistance += accidentalList.indexOf(note2.charAt(1)) - 2;
+    switch (note1.substring(1)){
+        case doubleFlat: 
+            intervalDistance += 2;
+            break;
+        case flat: 
+            intervalDistance += 1;
+            break;
+        case sharp: 
+            intervalDistance -= 1;
+            break;
+        case doubleSharp: 
+            intervalDistance -= 2;
+            break;
+        default: 
+            intervalDistance += 0;
+            break;
+    }
+    
+    switch (note2.substring(1)){
+        case doubleFlat: 
+            intervalDistance -= 2;
+            break;
+        case flat: 
+            intervalDistance -= 1;
+            break;
+        case doubleSharp: 
+            intervalDistance += 2;
+            break;
+        case sharp: 
+            intervalDistance += 1;
+            break;
+        default: 
+            intervalDistance += 0;
+            break;
+    }
     
     for (i = 0; i < highNote - lowNote; i += 1) {
         intervalDistance += stepList[lowNote + i];
@@ -151,18 +168,21 @@ function getIntervalQuality(note1, note2) {
         intervalClass = getIntervalClass(note1, note2),
         intervalDistance = getIntervalDistance(note1, note2, stepPattern);
     
-    if (intervalClass === 1) {
-        return perfectIntervalQualities[intervalDistance + 1];
-    } else if (intervalClass === 2) {
-        return majorIntervalQualities[intervalDistance];
-    } else if (intervalClass === 3) {
-        return majorIntervalQualities[intervalDistance - 2];
-    } else if (intervalClass === 4) {
-        return perfectIntervalQualities[intervalDistance - 4];
-    } else if (intervalClass === 5) {
-        return perfectIntervalQualities[intervalDistance - 6];
-    } else if (intervalClass === 7) {
-        return majorIntervalQualities[intervalDistance - 9];
+    switch(intervalClass){
+        case 1:
+            return perfectIntervalQualities[intervalDistance + 1];
+        case 2:
+            return majorIntervalQualities[intervalDistance];
+        case 3:
+            return majorIntervalQualities[intervalDistance - 2];
+        case 4:
+            return perfectIntervalQualities[intervalDistance - 4];
+        case 5:
+            return perfectIntervalQualities[intervalDistance - 6];
+        case 6:
+            return majorIntervalQualities[intervalDistance - 7];
+        case 7:
+            return majorIntervalQualities[intervalDistance - 9];
     }
 }
 
@@ -220,22 +240,22 @@ function printStepPattern(elementName, scale) {
 
 function printChords(elementId, scale) {
     "use strict";
-    var interval1,
+    var i = 0,
+        interval1,
         interval2,
         note1,
         note2,
         note3,
-        i = 0,
         chord,
         elem = document.getElementById(elementId);
     
     for (i = 0; i < (scale.length); i += 1) {
-        note1 = scale[i % scale.length]; //I
-        note2 = scale[(i + 2) % scale.length]; //III
+        note1 = scale[i % scale.length];       //I
+        note2 = scale[(i + 2) % scale.length]; //iii
         note3 = scale[(i + 4) % scale.length]; //V
         interval1 = getIntervalQuality(note1, note2);
         interval2 = getIntervalQuality(note2, note3);
-        chord = scale[i] + getChordQuality(interval1, interval2);
+        chord = scale[i] + " " + getChordQuality(interval1, interval2);
         elem.innerHTML += "<div class='chords'>" + chord + "</div>";
     }
 }
@@ -252,7 +272,6 @@ function run() {
         root = document.getElementById("root").value + document.getElementById("accidental").value,
         myScale = ["A", "B", "C", "D", "E", "F", "G"],
         scaleType = getScaleType(document.getElementById("scaleType").value),
-        //i = 0,
         stepOutput = "stepPattern",
         rootOutput = "rootNotes",
         thirdsOutput = "thirds",
@@ -269,9 +288,9 @@ function run() {
     
     addAccidentals(myScale, stepPattern, scaleType);
     
+    stripNaturals(myScale);
     printChords(chordsOutput, myScale);
     printStepPattern(stepOutput, myScale);
-    stripNaturals(myScale); //Do this AFTER printStepPattern
     printResult(rootOutput, myScale);
     printChordTones(3, thirdsOutput, myScale);
     printChordTones(5, fifthsOutput, myScale);
