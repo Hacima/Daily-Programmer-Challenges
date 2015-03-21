@@ -198,11 +198,12 @@ function stripNaturals(scale) {
     }
 }
 
-function printResult(elementName, scale) {
+function printResult(elementId, scale) {
     "use strict";
-    var i = 0;
+    var i = 0,
+        elem = document.getElementById(elementId);
     for (i = 0; i < scale.length; i += 1) {
-        document.getElementById(elementName).innerHTML += "<div class='rootNotes'>" + scale[i] + "</div>";
+        elem.innerHTML += "<div class='rootNotes'>" + scale[i] + "</div>";
     }
 }
 
@@ -241,8 +242,8 @@ function printChords(elementId, scale) {
     
     for (i = 0; i < (scale.length); i += 1) {
         note1 = scale[i % scale.length];       //I
-        note2 = scale[(i + 2) % scale.length]; //iii
-        note3 = scale[(i + 4) % scale.length]; //V
+        note2 = scale[(i + 2) % (scale.length - 1)]; //iii
+        note3 = scale[(i + 4) % (scale.length - 1)]; //V
         interval1 = getIntervalQuality(note1, note2);
         interval2 = getIntervalQuality(note2, note3);
         chord = scale[i] + " " + getChordQuality(interval1, interval2);
