@@ -10,48 +10,47 @@
 */
 
 //notes contains 2 octaves so that 'populate()' can grab any 8 consecutive notes without errors.
-var notes = ["A", "B", "C", "D", "E", "F", "G", "A", "B", "C", "D", "E", "F", "G"];
+//var notes = ["A", "B", "C", "D", "E", "F", "G", "A", "B", "C", "D", "E", "F", "G"];
 
 //stepPattern is the pattern that natural notes take. [0] is the number of half-steps from "A" to "B",
 //[1] is the half-steps from "B" to "C", etc. Any deviation from this pattern requires accidentals.
 var stepPattern = [2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2];
 
 //These arrays contain the half-step patterns for various scales.
-var majScale =    [2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1];
-var natMinScale = [2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2];
-var harMinScale = [2, 1, 2, 2, 1, 3, 1, 2, 1, 2, 2, 1, 3, 1];
-
-var modes = ["Ionian", "Dorian", "Phrygian", "Lydian", "Mixolydian", "Aeolian", "Locrian"];
-var myScale = ["C", "D", "E", "F", "G", "A", "B"]; //Scale to be populated.
-var root = "C"; //Starting point for the scale
-var scaleType = "Major";
 var doubleFlat = '♭♭';
 var flat = '♭';
 var natural = '♮';
 var sharp = '♯';
 var doubleSharp = 'x';
-var rootOutput = "rootNotes";
-var thirdsOutput = "thirds";
-var fifthsOutput = "fifths";
 
-function notePos(note, noteList) {
+function notePos(note) {
     "use strict";
+    var noteList = ["A", "B", "C", "D", "E", "F", "G", "A", "B", "C", "D", "E", "F", "G"];
     return noteList.indexOf(note);
 }
 
-function populateScale(rootNote, scale) {
+function secondNotePos(note) {
+    "use strict";
+    var noteList = ["A", "B", "C", "D", "E", "F", "G", "A", "B", "C", "D", "E", "F", "G"];
+    return noteList.indexOf(note) + 7;
+}
+
+function populateScale(rootNote, scale, noteList) {
     "use strict";
     var i = 0, //for loop iterator
-        rootNotePosition = notePos(rootNote.charAt(0), notes);
+        rootNotePosition = notePos(rootNote.charAt(0));
     scale[0] = rootNote;
     
     for (i = 1; i < scale.length; i += 1) {
-        scale[i] = notes[rootNotePosition + i];
+        scale[i] = noteList[rootNotePosition + i];
     }
 }
 
 function getScaleType(scaleType) {
     "use strict";
+    var majScale =    [2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1],
+        natMinScale = [2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2],
+        harMinScale = [2, 1, 2, 2, 1, 3, 1, 2, 1, 2, 2, 1, 3, 1];
     if (scaleType === "Major") {
         return majScale;
     } else if (scaleType === "Natural Minor") {
@@ -67,17 +66,19 @@ function getMode(mode) {
     "use strict";
     var modeSteps = [0, 0, 0, 0, 0, 0, 0],
         i = 0,
+        scale = getScaleType("Major"),
+        modes = ["Ionian", "Dorian", "Phrygian", "Lydian", "Mixolydian", "Aeolian", "Locrian"],
         startingPoint = modes.indexOf(mode);
 
     for (i = 0; i < modeSteps.length; i += 1) {
-        modeSteps[i] = majScale[i + startingPoint];
+        modeSteps[i] = scale[i + startingPoint];
     }
     return modeSteps;
 }
 
 function addAccidentals(userScale, steps, scaleType) {
     "use strict";
-    var rootNotePosition = notePos(userScale[0].charAt(0), notes),
+    var rootNotePosition = notePos(userScale[0].charAt(0)),
         accidentalList = [doubleFlat, flat, natural, sharp, doubleSharp],
         accidentalDegree = accidentalList.indexOf(userScale[0].charAt(1)),
         i = 0; //for loop iterator
@@ -88,29 +89,29 @@ function addAccidentals(userScale, steps, scaleType) {
     }
 }
 
-function getIntervalClass(note1, note2, noteList) {
+function getIntervalClass(note1, note2) {
     "use strict";
     note1 = note1.charAt(0);
     note2 = note2.charAt(0);
-    var note1Position = noteList.indexOf(note1),
-        note2Position = noteList.indexOf(note2);
+    var note1Position = notePos(note1),
+        note2Position = notePos(note2);
     if (note2Position - note1Position < 0) {
-        note2Position = noteList.indexOf(note2, (note2Position + 1));
+        note2Position = secondNotePos(note2);
     }
     
     return 1 + note2Position - note1Position;
 }
 
-function getIntervalDistance(note1, note2, noteList, stepList) {
+function getIntervalDistance(note1, note2, stepList) {
     "use strict";
-    var lowNote = noteList.indexOf(note1.charAt(0)),
-        highNote = noteList.indexOf(note2.charAt(0)),
+    var lowNote = notePos(note1.charAt(0)),
+        highNote = notePos(note2.charAt(0)),
         accidentalList = [doubleFlat, flat, natural, sharp, doubleSharp],
         intervalDistance = 0,
         i = 0; //for loop iterator
     
     if (highNote - lowNote < 0) {
-        highNote = noteList.indexOf(note2.charAt(0), (highNote + 1));
+        highNote = secondNotePos(note2.charAt(0));
     }
     
     intervalDistance += (accidentalList.indexOf(note1.charAt(1)) - 2) * -1;
@@ -123,10 +124,12 @@ function getIntervalDistance(note1, note2, noteList, stepList) {
     return intervalDistance;
 }
 
-function getIntervalQuality(intervalClass, intervalDistance) {
+function getIntervalQuality(note1, note2) {
     "use strict";
-    var perfectIntervalQualities = ["dim", "perfect", "aug"],
-        majorIntervalQualities = ["dim", "min", "maj", "aug"];
+    var perfectIntervalQualities = ["d", "P", "A"],
+        majorIntervalQualities = ["d", "m", "M", "A"],
+        intervalClass = getIntervalClass(note1, note2),
+        intervalDistance = getIntervalDistance(note1, note2, stepPattern);
     
     if (intervalClass === 1) {
         return perfectIntervalQualities[intervalDistance + 1];
@@ -170,6 +173,18 @@ function printChordTones(chordTone, elementName, scale) {
     }
 }
 
+function printStepPattern(elementName, scale) {
+    "use strict";
+    var i = 0,
+        elem = document.getElementById(elementName),
+        interval = 0;
+    
+    for (i = 0; i < (scale.length - 1); i += 1) {
+        interval = getIntervalQuality(scale[i], scale[i + 1]) + getIntervalClass(scale[i], scale[i + 1]);
+        elem.innerHTML += "<div class='steps'>" + interval + "</div>";
+    }
+}
+
 function clearResult(resultID) {
     "use strict";
     var elem = document.getElementById(resultID);
@@ -178,15 +193,22 @@ function clearResult(resultID) {
 
 function run() {
     "use strict";
-    var root = document.getElementById("root").value + document.getElementById("accidental").value,
+    var notes = ["A", "B", "C", "D", "E", "F", "G", "A", "B", "C", "D", "E", "F", "G"],
+        root = document.getElementById("root").value + document.getElementById("accidental").value,
+        myScale = ["A", "B", "C", "D", "E", "F", "G"],
         scaleType = getScaleType(document.getElementById("scaleType").value),
-        i = 0;
+        i = 0,
+        rootOutput = "rootNotes",
+        thirdsOutput = "thirds",
+        fifthsOutput = "fifths",
+        stepOutput = "stepPattern";
     
+    clearResult(stepOutput);
     clearResult(rootOutput);
     clearResult(thirdsOutput);
     clearResult(fifthsOutput);
     
-    populateScale(root, myScale);
+    populateScale(root, myScale, notes);
     
     if (scaleType === "mode") {
         scaleType = document.getElementById("scaleType").value;
@@ -195,8 +217,8 @@ function run() {
         addAccidentals(myScale, stepPattern, scaleType);
     }
     
-    getIntervalDistance(myScale[0], myScale[2], notes, stepPattern);
-    stripNaturals(myScale);
+    printStepPattern(stepOutput, myScale);
+    stripNaturals(myScale); //Do this AFTER printStepPattern
     printResult(rootOutput, myScale);
     printChordTones(3, thirdsOutput, myScale);
     printChordTones(5, fifthsOutput, myScale);
