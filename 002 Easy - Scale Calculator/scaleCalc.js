@@ -1,23 +1,26 @@
 /*
     So, this is my scale calculator program. The purpose is simple: Pick a root note from A to G, pick an accidental, pick a scale type, and it generates that scale! Pretty nifty!
+    Now, I could just build a database of every possible scale. With 7 root notes, 3 accidentals and 9 different scales to pick from, that's 187 different scales I would have to write out. Simpler, more readable and faster, yes, but not really a 'program'. 
     Here's how it's supposed to work, step by step.
-    1. Clear the output window and get the first note of the scale. This is a 2 character string that you get by adding 'root' and 'accidental' together.
-    2. Using the first note of the scale, fill the rest of the scale with natural notes from our 'notes[]' array. We do this by finding our root note in the array, and grabbing the next 7 notes.
-    3. Get the type of scale to calculate and grab the corresponding list of half-steps. There's no fancy algorhythm for this, just a simple switch statement.
-    4. Do a whole lot of other calculations for step patterns and chords!
-    5. Push the scale as <div> items and we're done!
+    1. Clear each output
+    2. Get the user's input for the root note of the scale and use it to fill the rest of the scale, ignoring accidentals for now.
+    3. Get the user's input for the type of scale, and use the corresponding half-step pattern to calculate all of the accidentals in this scale.
+    4. Delete the natural symbols from the scale for for aesthetics.
+    5. Calculate and print the chords, half-step pattern, root notes, 3rds, 5ths in that order.
 */
 
-//stepPattern is the pattern that natural notes take. [0] is the number of half-steps from "A" to "B",
-//[1] is the half-steps from "B" to "C", etc. Any deviation from this pattern requires accidentals.
+//stepPattern is the pattern that natural notes take. [0] is the number of half-steps from "A" to "B", etc.
 var stepPattern = [2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2];
-
 var doubleFlat = '♭♭';
 var flat = '♭';
 var natural = '♮';
 var sharp = '♯';
 var doubleSharp = 'x';
 
+
+/*
+    All of the functions that deal with the pattern arrays rely on these functions to tell them what section of the array to use. For example, a C-Major scale would need to be calculated starting from major[2], while an E-Major scale needs to be calculated from major[4]. This is easily calculated with major[notePos("C")] or major[notePos("E")]. 
+*/
 function notePos(note) {
     "use strict";
     var noteList = ["A", "B", "C", "D", "E", "F", "G"];
@@ -65,20 +68,6 @@ function getScaleType(scaleType) {
         case "Locrian": return locrian;
         default: return 0;
     }
-}
-
-function getMode(mode) {
-    "use strict";
-    var modeSteps = [0, 0, 0, 0, 0, 0, 0],
-        i = 0,
-        scale = getScaleType("Major"),
-        modes = ["Ionian", "Dorian", "Phrygian", "Lydian", "Mixolydian", "Aeolian", "Locrian"],
-        startingPoint = modes.indexOf(mode);
-    
-    for (i = 0; i < modeSteps.length; i += 1) {
-        modeSteps[i] = scale[i + startingPoint];
-    }
-    return modeSteps;
 }
 
 function addAccidentals(userScale, steps, scaleType) {
@@ -217,12 +206,13 @@ function printResult(elementName, scale) {
     }
 }
 
-function printChordTones(chordTone, elementName, scale) {
+function printChordTones(chordTone, elementId, scale) {
     "use strict";
-    var i = 0;
+    var i = 0,
+        elem = document.getElementById(elementId);
     chordTone -= 1;
     for (i = 0; i < scale.length; i += 1) {
-        document.getElementById(elementName).innerHTML += "<div class='chordTones'>" + scale[(i + chordTone) % scale.length] + "</div>";
+        elem.innerHTML += "<div class='chordTones'>" + scale[(i + chordTone) % (scale.length - 1)] + "</div>";
     }
 }
 
@@ -269,8 +259,8 @@ function clearResult(resultID) {
 function run() {
     "use strict";
     var notes = ["A", "B", "C", "D", "E", "F", "G", "A", "B", "C", "D", "E", "F", "G"],
-        root = document.getElementById("root").value + document.getElementById("accidental").value,
-        myScale = ["A", "B", "C", "D", "E", "F", "G"],
+        tonic = document.getElementById("root").value + document.getElementById("accidental").value,
+        myScale = ["A", "B", "C", "D", "E", "F", "G", "A"],
         scaleType = getScaleType(document.getElementById("scaleType").value),
         stepOutput = "stepPattern",
         rootOutput = "rootNotes",
@@ -284,7 +274,7 @@ function run() {
     clearResult(fifthsOutput);
     clearResult(chordsOutput);
     
-    populateScale(root, myScale, notes);
+    populateScale(tonic, myScale, notes);
     
     addAccidentals(myScale, stepPattern, scaleType);
     
