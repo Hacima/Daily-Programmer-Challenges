@@ -48,17 +48,37 @@ function populateScale(rootNote, scale, noteList) {
 
 function getScaleType(scaleType) {
     "use strict";
-    var majScale =    [2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1],
+    var majScale    = [2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1],
         natMinScale = [2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2],
-        harMinScale = [2, 1, 2, 2, 1, 3, 1, 2, 1, 2, 2, 1, 3, 1];
-    if (scaleType === "Major") {
-        return majScale;
-    } else if (scaleType === "Natural Minor") {
-        return natMinScale;
-    } else if (scaleType === "Harmonic Minor") {
-        return harMinScale;
-    } else {
-        return "mode";
+        harMinScale = [2, 1, 2, 2, 1, 3, 1, 2, 1, 2, 2, 1, 3, 1],
+        dorian      = [2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1, 2],
+        phrygian    = [1, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2],
+        lydian      = [2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1],
+        mixolydian  = [2, 2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2],
+        aeolian     = [2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2],
+        locrian     = [1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2, 1];
+    
+    switch(scaleType){
+        case "Major":
+            return majScale;
+        case "Natural Minor":
+            return natMinScale;
+        case "Harmonic Minor":
+            return harMinScale;
+        case "Dorian":
+            return dorian;
+        case "Phrygian":
+            return phrygian;
+        case "Lydian":
+            return lydian;
+        case "Mixolydian":
+            return mixolydian;
+        case "Aeolian":
+            return aeolian;
+        case "Locrian":
+            return locrian;
+        default:
+            return 0;
     }
 }
 
@@ -210,9 +230,9 @@ function printChords(elementId, scale) {
         elem = document.getElementById(elementId);
     
     for (i = 0; i < (scale.length); i += 1) {
-        note1 = scale[i % scale.length];
-        note2 = scale[(i + 2) % scale.length];
-        note3 = scale[(i + 4) % scale.length];
+        note1 = scale[i % scale.length]; //I
+        note2 = scale[(i + 2) % scale.length]; //III
+        note3 = scale[(i + 4) % scale.length]; //V
         interval1 = getIntervalQuality(note1, note2);
         interval2 = getIntervalQuality(note2, note3);
         chord = scale[i] + getChordQuality(interval1, interval2);
@@ -247,12 +267,7 @@ function run() {
     
     populateScale(root, myScale, notes);
     
-    if (scaleType === "mode") {
-        scaleType = document.getElementById("scaleType").value;
-        addAccidentals(myScale, stepPattern, getMode(scaleType));
-    } else {
-        addAccidentals(myScale, stepPattern, scaleType);
-    }
+    addAccidentals(myScale, stepPattern, scaleType);
     
     printChords(chordsOutput, myScale);
     printStepPattern(stepOutput, myScale);
@@ -260,5 +275,4 @@ function run() {
     printResult(rootOutput, myScale);
     printChordTones(3, thirdsOutput, myScale);
     printChordTones(5, fifthsOutput, myScale);
-    alert("B".charAt(1));
 }
