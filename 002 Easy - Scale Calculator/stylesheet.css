@@ -59,7 +59,7 @@ select {
 }
 
 .steps {
-    font-size: .9em;
+    font-size: .7em;
 }
 
 .rootNotes {
@@ -80,5 +80,6 @@ select {
 }
 
 .chords {
+    height:25px;
     font-size: .6em;
 }

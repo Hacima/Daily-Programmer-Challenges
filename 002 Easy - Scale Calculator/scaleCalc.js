@@ -1,36 +1,43 @@
 /*
-    So, this is my scale calculator program. The purpose is simple: Pick a root note from A to G, pick an accidental, pick a scale type, and it generates that scale! Pretty nifty!
-    Now, I could just build a database of every possible scale. With 7 root notes, 3 accidentals and 9 different scales to pick from, that's 187 different scales I would have to write out. Simpler, more readable and faster, yes, but not really a 'program'. 
-    Here's how it's supposed to work, step by step.
-    1. Clear each output
-    2. Get the user's input for the root note of the scale and use it to fill the rest of the scale, ignoring accidentals for now.
-    3. Get the user's input for the type of scale, and use the corresponding half-step pattern to calculate all of the accidentals in this scale.
-    4. Delete the natural symbols from the scale for for aesthetics.
-    5. Calculate and print the chords, half-step pattern, root notes, 3rds, 5ths in that order.
+So, this is my scale calculator program. The purpose is simple: Pick a root note from A to G,
+    pick an accidental, pick a scale type, and it generates that scale! Pretty nifty!
+Now, I could just build a database of every possible scale. With 7 root notes, 3 accidentals
+    and 9 different scales to pick from, that's 187 different scales I would have to write out.
+Simpler, more readable and faster, yes, but not really a 'program'. 
+Here's how it's supposed to work, step by step.
+1. Clear each output
+2. Get the user's input for the root note of the scale and use it to fill the rest of the
+    scale, ignoring accidentals for now.
+3. Get the user's input for the type of scale, and use the corresponding half-step pattern
+    to calculate all of the accidentals in this scale.
+4. Delete the natural symbols from the scale for for aesthetics.
+5. Calculate and print the chords, half-step pattern, root notes, 3rds, 5ths in that order.
 */
 
 //stepPattern is the pattern that natural notes take. [0] is the number of half-steps from "A" to "B", etc.
 var stepPattern = [2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2];
-var doubleFlat = '♭♭';
-var flat = '♭';
-var natural = '♮';
-var sharp = '♯';
-var doubleSharp = 'x';
-
+var DOUBLE_FLAT = '♭♭';
+var FLAT = '♭';
+var NATURAL = '♮';
+var SHARP = '♯';
+var DOUBLE_SHARP = 'x';
 
 /*
-    All of the functions that deal with the pattern arrays rely on these functions to tell them what section of the array to use. For example, a C-Major scale would need to be calculated starting from major[2], while an E-Major scale needs to be calculated from major[4]. This is easily calculated with major[notePos("C")] or major[notePos("E")]. 
+    All of the functions that deal with the pattern arrays rely on notePos() functions to tell 
+them what section of the array to use. For example, a C-Major scale would need to be
+calculated starting from major[2], while an E-Major scale needs to be calculated from
+major[4]. This is easily calculated with major[notePos("C")] or major[notePos("E")]. 
 */
 function notePos(note) {
     "use strict";
     var noteList = ["A", "B", "C", "D", "E", "F", "G"];
-    return noteList.indexOf(note);
+    return noteList.indexOf(note.charAt(0));
 }
 
 function secondNotePos(note) {
     "use strict";
     var noteList = ["A", "B", "C", "D", "E", "F", "G"];
-    return noteList.indexOf(note) + 7;
+    return noteList.indexOf(note.charAt(0)) + 7;
 }
 
 function populateScale(rootNote, scale, noteList) {
@@ -73,7 +80,7 @@ function getScaleType(scaleType) {
 function addAccidentals(userScale, steps, scaleType) {
     "use strict";
     var rootNotePosition = notePos(userScale[0].charAt(0)),
-        accidentalList = [doubleFlat, flat, natural, sharp, doubleSharp],
+        accidentalList = [DOUBLE_FLAT, FLAT, NATURAL, SHARP, DOUBLE_SHARP],
         accidentalDegree = accidentalList.indexOf(userScale[0].charAt(1)),
         i = 0; //for loop iterator
     
@@ -85,15 +92,13 @@ function addAccidentals(userScale, steps, scaleType) {
 
 function getIntervalClass(note1, note2) {
     "use strict";
-    note1 = note1.charAt(0);
-    note2 = note2.charAt(0);
-    var note1Position = notePos(note1),
-        note2Position = notePos(note2);
-    if (note2Position - note1Position < 0) {
-        note2Position = secondNotePos(note2);
+    var note1Pos = notePos(note1),
+        note2Pos = notePos(note2);
+    if (note2Pos < note1Pos) {
+        note2Pos = secondNotePos(note2);
     }
     
-    return 1 + note2Position - note1Position;
+    return 1 + note2Pos - note1Pos;
 }
 
 function getIntervalDistance(note1, note2, stepList) {
@@ -103,43 +108,41 @@ function getIntervalDistance(note1, note2, stepList) {
         intervalDistance = 0,
         i = 0; //for loop iterator
     
-    if (highNote - lowNote < 0) {
+    if (highNote < lowNote) {
         highNote = secondNotePos(note2.charAt(0));
     }
     
     switch (note1.substring(1)){
-        case doubleFlat: 
+        case DOUBLE_FLAT: 
             intervalDistance += 2;
             break;
-        case flat: 
+        case FLAT: 
             intervalDistance += 1;
             break;
-        case sharp: 
+        case SHARP: 
             intervalDistance -= 1;
             break;
-        case doubleSharp: 
+        case DOUBLE_SHARP: 
             intervalDistance -= 2;
             break;
         default: 
-            intervalDistance += 0;
             break;
     }
     
     switch (note2.substring(1)){
-        case doubleFlat: 
+        case DOUBLE_FLAT: 
             intervalDistance -= 2;
             break;
-        case flat: 
+        case FLAT: 
             intervalDistance -= 1;
             break;
-        case doubleSharp: 
+        case DOUBLE_SHARP: 
             intervalDistance += 2;
             break;
-        case sharp: 
+        case SHARP: 
             intervalDistance += 1;
             break;
         default: 
-            intervalDistance += 0;
             break;
     }
     
@@ -158,20 +161,13 @@ function getIntervalQuality(note1, note2) {
         intervalDistance = getIntervalDistance(note1, note2, stepPattern);
     
     switch(intervalClass){
-        case 1:
-            return perfectIntervalQualities[intervalDistance + 1];
-        case 2:
-            return majorIntervalQualities[intervalDistance];
-        case 3:
-            return majorIntervalQualities[intervalDistance - 2];
-        case 4:
-            return perfectIntervalQualities[intervalDistance - 4];
-        case 5:
-            return perfectIntervalQualities[intervalDistance - 6];
-        case 6:
-            return majorIntervalQualities[intervalDistance - 7];
-        case 7:
-            return majorIntervalQualities[intervalDistance - 9];
+        case 1: return perfectIntervalQualities[intervalDistance + 1];
+        case 2: return majorIntervalQualities[intervalDistance];
+        case 3: return majorIntervalQualities[intervalDistance - 2];
+        case 4: return perfectIntervalQualities[intervalDistance - 4];
+        case 5: return perfectIntervalQualities[intervalDistance - 6];
+        case 6: return majorIntervalQualities[intervalDistance - 7];
+        case 7: return majorIntervalQualities[intervalDistance - 9];
     }
 }
 
@@ -192,7 +188,7 @@ function stripNaturals(scale) {
     "use strict";
     var i = 0;
     for (i = 0; i < scale.length; i += 1) {
-        if (scale[i].charAt(1) === natural) {
+        if (scale[i].charAt(1) === NATURAL) {
             scale[i] = scale[i].charAt(0);
         }
     }
@@ -280,9 +276,10 @@ function run() {
     addAccidentals(myScale, stepPattern, scaleType);
     
     stripNaturals(myScale);
-    printChords(chordsOutput, myScale);
+    
     printStepPattern(stepOutput, myScale);
     printResult(rootOutput, myScale);
     printChordTones(3, thirdsOutput, myScale);
     printChordTones(5, fifthsOutput, myScale);
+    printChords(chordsOutput, myScale);
 }
