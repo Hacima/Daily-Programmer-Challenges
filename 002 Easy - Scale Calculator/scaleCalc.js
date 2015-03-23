@@ -78,6 +78,18 @@ function getScaleType(scaleType) {
 }
 
 function addAccidentals(userScale, steps, scaleType) {
+/*
+Adding accidentals is a little more involved than you might think.
+We have to compare the step directions for the given scale (scaleType) to the step directions
+for default, natural notes (steps).
+If we had a scale that went from [A, B], our steps array tells us that for natural notes, this is
+2 half-steps. Our scaleType is the phrygian scale, however, and it directs us to only go up 1
+half-step.
+We modify the accidental degree in the scale by the difference (-1), which takes B from a 
+natural to a flat. Now we have [A, Bb], and our accidentalDegree is at -1. If we want to go up
+to C, we compare the two arrays and find that the difference between them is 0. THEN we apply
+our accidentalDegree and we end up with [A, Bb, Cb].
+*/
     "use strict";
     var rootNotePosition = notePos(userScale[0].charAt(0)),
         accidentalList = [DOUBLE_FLAT, FLAT, NATURAL, SHARP, DOUBLE_SHARP],
@@ -91,6 +103,14 @@ function addAccidentals(userScale, steps, scaleType) {
 }
 
 function getIntervalClass(note1, note2) {
+/*
+Interval class is the number of notes between note1 and note2, inclusive. This means that from
+A to A, the interval class would be 1.
+This function works by converting the notes into note positions (A to 0, B to 1, etc) and then
+simply returning the difference+1. The secondNotePos() function is used in case of intervals like
+[G, A], which converts to [6, 0], returning -6 instead of 2.
+With the secondNotePos function, it would be [6, 7] and return 2 as expected.
+*/
     "use strict";
     var note1Pos = notePos(note1),
         note2Pos = notePos(note2);
