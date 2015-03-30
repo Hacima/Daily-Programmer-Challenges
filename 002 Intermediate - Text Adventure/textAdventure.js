@@ -43,7 +43,8 @@ function getLocation(playerPosition, map){
 }
 
 function Meadow(){
-	
+	console.log("A curious patch of dead grass lays at your feet.");
+	var action = getInput();
 }
 
 function validateInput(input, listOfValidInputs){
