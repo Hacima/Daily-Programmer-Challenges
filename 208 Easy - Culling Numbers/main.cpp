@@ -20,5 +20,4 @@ int main() {
 	
 	cout<<"Original: "<<numbers<<endl<<endl;
 	cout<<"Culled: "<<results<<endl;
-	
 }
